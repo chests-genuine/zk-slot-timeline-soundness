@@ -174,8 +174,13 @@ def main() -> None:
             print(f"  • {lbl}: constant value across samples (first @#{changes[0][0]})")
         else:
             print(f"  • {lbl}: {len(changes)-1} change(s)")
-            for blk, val in changes:
-                print(f"      - @#{blk}: {val}")
+           # ✅ New: Include UTC timestamp for each change
+        for blk, val in changes:
+            try:
+                ts = datetime.utcfromtimestamp(w3.eth.get_block(blk).timestamp).isoformat() + "Z"
+            except Exception:
+                ts = "unknown"
+            print(f"      - @#{blk} ({ts}): {val}")
 
     ok = total_changes == 0
     print(f"\n{'🎯 SOUND (no changes detected)' if ok else '🚨 UNSOUND (slot value changes observed)'}")
