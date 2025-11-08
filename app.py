@@ -84,7 +84,12 @@ def scan_timeline(
     total = len(blocks)
     for i, b in enumerate(blocks, start=1):
         pct = (i / total) * 100
-        print(f"🔍 Block {b} ({i}/{total}, {pct:.1f}%)")
+         # ✅ New: Print progress with estimated time remaining
+    elapsed = time.time() - start_time
+    avg_time_per_block = elapsed / i if i > 0 else 0
+    remaining_blocks = total - i
+    eta = remaining_blocks * avg_time_per_block
+    print(f"🔍 Block {b} ({i}/{total}, {pct:.1f}%) | ETA: {eta:.1f}s remaining")
         for lbl, idx in slots:
             try:
                 val = get_storage_at(w3, address, idx, b)
